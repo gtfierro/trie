@@ -15,7 +15,7 @@ type CustomTrie struct {
 }
 
 // NewCustomTrie allocates and returns a new *CustomTrie.
-func NewCustomTrie(segmenter StringSegmenter) Trie {
+func NewCustomTrie(segmenter StringSegmenter) *CustomTrie {
 	return &CustomTrie{
 		segmenter: segmenter,
 		children:  make(map[string]*CustomTrie),
@@ -48,7 +48,7 @@ func (trie *CustomTrie) Put(key string, value interface{}) bool {
 	for part, i := trie.segmenter(key, 0); ; part, i = trie.segmenter(key, i) {
 		child, _ := node.children[part]
 		if child == nil {
-			child = NewCustomTrie()
+			child = NewCustomTrie(trie.segmenter)
 			node.children[part] = child
 		}
 		node = child
